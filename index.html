@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Маркетплейс цифровых товаров</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fdf6f0;
+            color: #333;
+            text-align: center;
+        }
+        .header {
+            background-color: #ffdab9;
+            padding: 20px;
+        }
+        .container {
+            margin: 20px auto;
+            max-width: 800px;
+        }
+        .product {
+            background: #fff;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .footer {
+            background-color: #ffdab9;
+            padding: 10px;
+            margin-top: 20px;
+        }
+        .cart {
+            margin: 20px auto;
+            max-width: 800px;
+            background: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .downloads {
+            margin: 20px auto;
+            max-width: 800px;
+            background: #e6f7ff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+    </style>
+    <script>
+        let cart = [];
+        let products = {
+            'Таблица учёта финансов': 'files/finance_table.xlsx',
+            'Гайд по планированию': 'files/planning_guide.pdf'
+        };
+        
+        function addToCart(productName, price) {
+            cart.push({ name: productName, price: price });
+            updateCart();
+        }
+        
+        function updateCart() {
+            let cartContainer = document.getElementById("cart");
+            cartContainer.innerHTML = "<h2>Корзина</h2>";
+            let total = 0;
+            cart.forEach((item, index) => {
+                cartContainer.innerHTML += `<p>${item.name} - ${item.price} ₽ <button onclick="removeFromCart(${index})">Удалить</button></p>`;
+                total += item.price;
+            });
+            cartContainer.innerHTML += `<h3>Итого: ${total} ₽</h3>`;
+            cartContainer.innerHTML += `<button onclick="checkout(${total})">Оплатить</button>`;
+        }
+        
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+        
+        function checkout(total) {
+            if (total === 0) {
+                alert("Корзина пуста. Добавьте товары для оформления заказа.");
+                return;
+            }
+            
+            let paymentLink = "https://yourbank.com/pay?amount=" + total; // Замените на свою ссылку
+            alert("После успешной оплаты вы получите доступ к файлам.");
+            window.open(paymentLink, "_blank");
+            showDownloads();
+        }
+        
+        function showDownloads() {
+            let downloadContainer = document.getElementById("downloads");
+            downloadContainer.innerHTML = "<h2>Скачивание файлов</h2>";
+            cart.forEach(item => {
+                downloadContainer.innerHTML += `<p><a href="${products[item.name]}" download>${item.name}</a></p>`;
+            });
+            downloadContainer.style.display = "block";
+        }
+    </script>
+</head>
+<body>
+    <div class="header">
+        <h1>Маркетплейс цифровых товаров</h1>
+    </div>
+    <div class="container">
+        <h2>Каталог</h2>
+        <div class="product">
+            <h3>Таблица учёта финансов</h3>
+            <p>Цена: 500 ₽</p>
+            <button onclick="addToCart('Таблица учёта финансов', 500)">Добавить в корзину</button>
+        </div>
+        <div class="product">
+            <h3>Гайд по планированию</h3>
+            <p>Цена: 300 ₽</p>
+            <button onclick="addToCart('Гайд по планированию', 300)">Добавить в корзину</button>
+        </div>
+    </div>
+    <div class="cart" id="cart">
+        <h2>Корзина</h2>
+    </div>
+    <div class="downloads" id="downloads"></div>
+    <div class="footer">
+        <p>&copy; 2025 Маркетплейс цифровых товаров</p>
+    </div>
+</body>
+</html>
